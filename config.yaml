@@ -1,21 +1,31 @@
 budget: 100
-max_per_team: 3
 squad_size: 15
+max_per_team: 3
 formations:
 - - 3
   - 4
   - 3
-- - 4
-  - 4
-  - 2
 - - 3
   - 5
   - 2
-horizon: 5
+- - 4
+  - 4
+  - 2
+horizon: 1
 transfer_limit: 1
+transfer_cost: 4
+chip_rules:
+  wildcard: true
+  bench_boost: true
+  triple_captain: true
+  free_hit: true
+cache_hours: 6
+expected_points_model: fpl_ep_next
 data_dir: ./data
 output_dir: ./output
-expected_points_model: official_ep
 logging:
   level: INFO
-  file: ./output/fpl_optimiser.log
+  file: fpl_optimizer.log
+solver:
+  backend: pulp
+  time_limit: 60
