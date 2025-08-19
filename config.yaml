@@ -1,0 +1,21 @@
+budget: 100
+max_per_team: 3
+squad_size: 15
+formations:
+- - 3
+  - 4
+  - 3
+- - 4
+  - 4
+  - 2
+- - 3
+  - 5
+  - 2
+horizon: 5
+transfer_limit: 1
+data_dir: ./data
+output_dir: ./output
+expected_points_model: official_ep
+logging:
+  level: INFO
+  file: ./output/fpl_optimiser.log
