@@ -60,20 +60,31 @@ make data
 ---
 
 ## 📍 Checkpoint 2: Data Cleaning & Feature Engineering
-**Objective:** Prepare clean dataset with engineered features.
+**Objective:** Prepare clean dataset with anti-leakage engineered features for realistic ML modeling.
 
 **Explicit Instructions:**  
-1. Load raw CSVs from `data/raw/`.  
-2. Clean and normalize data:  
-   - Standardize player IDs and team IDs.  
-   - Replace missing minutes/points with 0.  
-   - Drop irrelevant columns.  
-3. Engineer features for modelling:  
-   - Rolling averages for goals, assists, clean sheets over last 3-5 GWs.  
-   - Fixture difficulty-adjusted expected points.  
-   - Estimate minutes likelihood based on historical play.  
-4. Save processed dataset to `data/features/features.csv`.  
-5. Validate row count ≥10,000 (players × GWs).  
+1. **Data Loading & Cleaning:**
+   - Load raw CSVs from `data/raw/`
+   - Standardize player IDs and team IDs
+   - Replace missing minutes/points with 0, ensure non-negative values
+   - Drop irrelevant columns and handle data quality issues
+
+2. **Anti-Leakage Feature Engineering:**
+   - **Lagged Rolling Features**: Create rolling averages (3, 5 GW windows) that EXCLUDE current gameweek
+     - `total_points_rolling_3_lag`, `goals_scored_rolling_3_lag`, etc.
+     - Use `.shift(1)` to prevent data leakage in temporal prediction
+   - **Current Rolling Features**: Also create current-inclusive versions for comparison/debugging
+   - **Minutes Likelihood**: Historical probability of getting minutes based on past performance
+   
+3. **Temporal & Context Features:**
+   - **Fixture Difficulty**: Use upcoming match difficulty, not current match results
+   - **Form Metrics**: Points consistency, goal involvement, efficiency ratios
+   - **Position & Price**: Static player attributes for model context
+
+4. **Output & Validation:**
+   - Save processed dataset to `data/features/features.csv`
+   - Validate: sufficient rows for modeling (≥500 for limited data, ≥10,000 ideal)
+   - Ensure lagged features have proper null handling for first gameweeks  
 
 **Command:**
 
