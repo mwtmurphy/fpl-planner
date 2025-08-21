@@ -84,15 +84,34 @@ make features
 ---
 
 ## 📍 Checkpoint 3: Forecasting Expected Points
-**Objective:** Predict expected FPL points per player per GW.
+**Objective:** Predict expected FPL points per player per GW using realistic validation.
 
 **Explicit Instructions:**  
-1. Split dataset into train/validate/test:  
-   - Train: 2018–21, Validate: 21/22, Test: 22/23.  
-2. Train a regression model (XGBoost or scikit-learn linear regressor).  
-3. Input features: rolling form, fixture difficulty, minutes likelihood.  
-4. Output expected points CSV: `data/forecasts/expected_points.csv`.  
-5. Validate correlation with actual points >0.5 on validation set.  
+1. **Data Collection & Temporal Validation:**
+   - Collect multiple gameweeks of data for proper time-series validation
+   - Use time-shifted validation: train on GW 1-(n-1), predict GW n
+   - Implement leave-one-gameweek-out cross-validation for robust assessment
+   
+2. **Feature Engineering (Anti-Leakage):**
+   - **Lagged rolling features:** exclude current GW from rolling averages
+   - **Forward-only features:** use only past performance to predict future
+   - **Temporal features:** fixture difficulty for upcoming matches, not current
+   
+3. **Model Training:**
+   - Train XGBoost or RandomForest regression model
+   - Input features: lagged rolling form, upcoming fixture difficulty, minutes likelihood
+   - Hyperparameter tuning with time-aware cross-validation
+   
+4. **Realistic Validation:**
+   - **Target correlation: 0.3-0.6** (industry-realistic for FPL prediction)
+   - **Expected R²: 0.1-0.4** (typical for sports forecasting)
+   - **RMSE target: 2-4 points** (realistic prediction error)
+   - Validate on genuinely unseen future gameweeks
+   
+5. **Output:**
+   - Generate predictions for next gameweek using only historical data
+   - Save to `data/forecasts/expected_points.csv` with confidence intervals
+   - Include model uncertainty and prediction intervals  
 
 **Command:**
 

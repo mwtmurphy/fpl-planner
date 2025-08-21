@@ -101,8 +101,8 @@ class FPLFeatureEngineer:
         print("  ✅ Data cleaning complete")
     
     def create_rolling_features(self):
-        """Create rolling averages for key performance metrics"""
-        print("📈 Engineering rolling performance features...")
+        """Create rolling averages for key performance metrics (anti-leakage)"""
+        print("📈 Engineering rolling performance features (lagged)...")
         
         # Ensure proper sorting for rolling calculations
         self.results_df = self.results_df.sort_values(['player_id', 'gameweek'])
@@ -115,16 +115,26 @@ class FPLFeatureEngineer:
         for window in self.rolling_windows:
             for metric in performance_metrics:
                 if metric in self.results_df.columns:
-                    # Create rolling mean
-                    col_name = f'{metric}_rolling_{window}'
+                    # Create LAGGED rolling mean (excludes current gameweek)
+                    col_name = f'{metric}_rolling_{window}_lag'
                     self.results_df[col_name] = (
+                        self.results_df.groupby('player_id')[metric]
+                        .rolling(window=window, min_periods=1)
+                        .mean()
+                        .shift(1)  # Shift by 1 to exclude current gameweek
+                        .reset_index(level=0, drop=True)
+                    )
+                    
+                    # Also create current rolling (for comparison/debugging)
+                    col_name_current = f'{metric}_rolling_{window}'
+                    self.results_df[col_name_current] = (
                         self.results_df.groupby('player_id')[metric]
                         .rolling(window=window, min_periods=1)
                         .mean()
                         .reset_index(level=0, drop=True)
                     )
         
-        print(f"  ✅ Created rolling features for windows: {self.rolling_windows}")
+        print(f"  ✅ Created lagged rolling features for windows: {self.rolling_windows}")
     
     def create_fixture_difficulty_features(self):
         """Create fixture difficulty adjusted features"""
