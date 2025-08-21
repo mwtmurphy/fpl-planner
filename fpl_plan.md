@@ -60,20 +60,31 @@ make data
 ---
 
 ## 📍 Checkpoint 2: Data Cleaning & Feature Engineering
-**Objective:** Prepare clean dataset with engineered features.
+**Objective:** Prepare clean dataset with anti-leakage engineered features for realistic ML modeling.
 
 **Explicit Instructions:**  
-1. Load raw CSVs from `data/raw/`.  
-2. Clean and normalize data:  
-   - Standardize player IDs and team IDs.  
-   - Replace missing minutes/points with 0.  
-   - Drop irrelevant columns.  
-3. Engineer features for modelling:  
-   - Rolling averages for goals, assists, clean sheets over last 3-5 GWs.  
-   - Fixture difficulty-adjusted expected points.  
-   - Estimate minutes likelihood based on historical play.  
-4. Save processed dataset to `data/features/features.csv`.  
-5. Validate row count ≥10,000 (players × GWs).  
+1. **Data Loading & Cleaning:**
+   - Load raw CSVs from `data/raw/`
+   - Standardize player IDs and team IDs
+   - Replace missing minutes/points with 0, ensure non-negative values
+   - Drop irrelevant columns and handle data quality issues
+
+2. **Anti-Leakage Feature Engineering:**
+   - **Lagged Rolling Features**: Create rolling averages (3, 5 GW windows) that EXCLUDE current gameweek
+     - `total_points_rolling_3_lag`, `goals_scored_rolling_3_lag`, etc.
+     - Use `.shift(1)` to prevent data leakage in temporal prediction
+   - **Current Rolling Features**: Also create current-inclusive versions for comparison/debugging
+   - **Minutes Likelihood**: Historical probability of getting minutes based on past performance
+   
+3. **Temporal & Context Features:**
+   - **Fixture Difficulty**: Use upcoming match difficulty, not current match results
+   - **Form Metrics**: Points consistency, goal involvement, efficiency ratios
+   - **Position & Price**: Static player attributes for model context
+
+4. **Output & Validation:**
+   - Save processed dataset to `data/features/features.csv`
+   - Validate: sufficient rows for modeling (≥500 for limited data, ≥10,000 ideal)
+   - Ensure lagged features have proper null handling for first gameweeks  
 
 **Command:**
 
@@ -84,15 +95,34 @@ make features
 ---
 
 ## 📍 Checkpoint 3: Forecasting Expected Points
-**Objective:** Predict expected FPL points per player per GW.
+**Objective:** Predict expected FPL points per player per GW using realistic validation.
 
 **Explicit Instructions:**  
-1. Split dataset into train/validate/test:  
-   - Train: 2018–21, Validate: 21/22, Test: 22/23.  
-2. Train a regression model (XGBoost or scikit-learn linear regressor).  
-3. Input features: rolling form, fixture difficulty, minutes likelihood.  
-4. Output expected points CSV: `data/forecasts/expected_points.csv`.  
-5. Validate correlation with actual points >0.5 on validation set.  
+1. **Data Collection & Temporal Validation:**
+   - Collect multiple gameweeks of data for proper time-series validation
+   - Use time-shifted validation: train on GW 1-(n-1), predict GW n
+   - Implement leave-one-gameweek-out cross-validation for robust assessment
+   
+2. **Feature Engineering (Anti-Leakage):**
+   - **Lagged rolling features:** exclude current GW from rolling averages
+   - **Forward-only features:** use only past performance to predict future
+   - **Temporal features:** fixture difficulty for upcoming matches, not current
+   
+3. **Model Training:**
+   - Train XGBoost or RandomForest regression model
+   - Input features: lagged rolling form, upcoming fixture difficulty, minutes likelihood
+   - Hyperparameter tuning with time-aware cross-validation
+   
+4. **Realistic Validation:**
+   - **Target correlation: 0.3-0.6** (industry-realistic for FPL prediction)
+   - **Expected R²: 0.1-0.4** (typical for sports forecasting)
+   - **RMSE target: 2-4 points** (realistic prediction error)
+   - Validate on genuinely unseen future gameweeks
+   
+5. **Output:**
+   - Generate predictions for next gameweek using only historical data
+   - Save to `data/forecasts/expected_points.csv` with confidence intervals
+   - Include model uncertainty and prediction intervals  
 
 **Command:**
 
