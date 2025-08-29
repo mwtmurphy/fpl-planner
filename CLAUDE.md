@@ -1,162 +1,109 @@
-# CLAUDE.md
-
-This file provides guidance to Claude Code (claude.ai/code) when working with code in this repository.
+# Claude Development Guide
 
 ## Project Overview
+Brief description of what this Python/SQL project does and its main purpose. Include information about the database schema, main data flows, and key business logic.
 
-This is a Fantasy Premier League (FPL) multi-gameweek optimization tool that uses machine learning forecasting and mathematical optimization to maximize points across multiple gameweeks while managing transfers efficiently.
+## Code Style Guidelines
+- Follow PEP 8 for Python code style
+- Use 4-space indentation for Python
+- Maximum line length: 88 characters (Black default) or 100 characters
+- Use type hints for all function parameters and return values
+- SQL keywords should be UPPERCASE, table/column names lowercase with underscores
+- Use consistent indentation in SQL queries (2 or 4 spaces)
+- Comments should explain "why", not "what"
+- Use docstrings for all modules, classes, and functions
 
-## Key Technologies
+## Architecture Patterns
+- Follow existing project structure and Python package conventions
+- Use virtual environments (Poetry preferred, or venv)
+- Implement proper error handling with custom exceptions
+- Use Pydantic for data validation and serialization
+- Follow database connection patterns (connection pooling, proper session management)
+- Use ORM patterns appropriately (SQLAlchemy, Django ORM, or raw SQL when needed)
+- Separate business logic from database operations (repository pattern)
+- Write unit tests for all business logic and integration tests for database operations
 
-- **Python 3.9+** with Poetry for dependency management
-- **Machine Learning**: XGBoost for expected points forecasting
-- **Optimization**: PuLP for Mixed Integer Linear Programming (MILP)
-- **Data Processing**: Pandas, NumPy for data manipulation
-- **API Integration**: Requests for FPL API data collection
-- **Testing**: Pytest for unit tests
-- **Code Quality**: Black, isort, flake8
+## Development Workflow
+1. Create feature branches from `main`
+2. Set up virtual environment: `poetry install` or `python -m venv venv`
+3. Write tests first (TDD approach) using pytest
+4. Implement features with proper type hints and documentation
+5. Run pre-commit hooks: `black`, `ruff`, `mypy`
+6. Run database migrations if schema changes are needed
+7. Create pull requests for code review
+8. Ensure all tests pass and code coverage requirements are met
 
-## Development Commands
+## Git Commit Best Practices
+- Use conventional commit format: `type(scope): description`
+- Types: feat, fix, docs, style, refactor, test, chore
+- Keep subject line under 50 characters
+- Use imperative mood: "Add feature" not "Added feature"
+- Include body for complex changes explaining why, not what
+- Reference issues with "Fixes #123" or "Closes #456"
 
-### Setup and Installation
-```bash
-# Initialize project structure
-make setup
-
-# Install dependencies (requires Poetry)
-poetry install
-poetry shell
-```
-
-### Data Pipeline
-```bash
-# Complete data pipeline
-make data          # Fetch FPL API data
-make features      # Engineer features from raw data
-make forecast      # Train ML model and generate predictions
-
-# Data validation
-make validate      # Validate data quality
-```
-
-### Optimization
-```bash
-# Single gameweek optimization
-make optimise_gw N=15
-
-# Multi-gameweek optimization
-make optimise_horizon H=5
-
-# Automatic horizon selection
-make select_horizon
-```
-
-### Code Quality
-```bash
-make format        # Black + isort formatting
-make lint          # Flake8 linting
-make test          # Pytest unit tests
-```
-
-### Analysis and Reporting
-```bash
-make backtest      # Historical performance evaluation
-make report        # Generate performance reports
-make run_app       # Launch CLI application
-```
-
-### Utility
-```bash
-make clean         # Clean output files
-make help          # Show available commands
-```
-
-## Architecture Overview
-
-### Core Components
-
-1. **Data Collection** (`src/data_collection.py`)
-   - Fetches data from FPL API endpoints (bootstrap-static, fixtures, live gameweek data)
-   - Handles rate limiting and retry logic
-   - Saves structured CSV files to `data/raw/`
-
-2. **Data Validation** (`src/data_validation.py`)
-   - Comprehensive data quality checks
-   - Validates player data, fixtures, and historical results
-   - Ensures data integrity before processing
-
-3. **Feature Engineering** (`src/feature_engineering.py`)
-   - Processes raw data into ML-ready features
-   - Creates rolling averages, fixture difficulty adjustments
-   - Outputs to `data/features/`
-
-4. **Forecasting** (`src/forecasting.py`)
-   - XGBoost model for expected points prediction
-   - Handles player form, fixture difficulty, minutes likelihood
-   - Saves predictions to `data/forecasts/`
-
-5. **Optimization Modules**
-   - `single_gw_optimizer.py`: Single gameweek squad optimization
-   - `multi_gw_optimizer.py`: Multi-gameweek transfer planning
-   - `horizon_selection.py`: Dynamic planning period selection
-
-6. **Analysis Tools**
-   - `backtesting.py`: Historical strategy validation
-   - `reporting.py`: Performance metrics and visualization
-   - `app.py`: CLI interface for user interaction
-
-### Data Flow
-
-1. **Raw Data**: FPL API → `data/raw/*.csv`
-2. **Features**: Raw data → `data/features/features.csv`
-3. **Forecasts**: Features → `data/forecasts/expected_points.csv`
-4. **Optimization**: Forecasts → `output/team_gw*.csv` or `output/plan_h*.csv`
-
-### Key Constraints in Optimization Model
-
-- Squad composition: 2 GK, 5 DEF, 5 MID, 3 FWD
-- Budget limit: £100m total squad value
-- Max 3 players per team
-- Transfer limits: 1 free transfer + paid transfers (-4 points each)
-- Chip usage restrictions (Wildcard, Bench Boost, Triple Captain)
-
-## File Structure
-
-```
-src/
-├── data_collection.py     # FPL API data fetching
-├── data_validation.py     # Data quality validation
-├── feature_engineering.py # Feature creation for ML
-├── forecasting.py         # XGBoost predictions
-├── single_gw_optimizer.py # Single gameweek optimization
-├── multi_gw_optimizer.py  # Multi-gameweek planning
-├── horizon_selection.py   # Dynamic horizon selection
-├── backtesting.py         # Historical validation
-├── reporting.py           # Performance analysis
-└── app.py                 # CLI interface
-
-data/
-├── raw/                   # Raw FPL API data
-├── features/              # Processed ML features
-└── forecasts/             # Model predictions
-
-output/                    # Optimization results
-tests/                     # Unit tests
-examples/                  # Usage examples
-```
-
-## Development Notes
-
-- The project uses Poetry for dependency management - ensure `poetry shell` is active
-- All data processing is pipeline-based - run steps sequentially (data → features → forecast → optimize)
-- The optimization uses MILP with PuLP - solutions may take several minutes for multi-gameweek horizons
-- FPL API has rate limits - data collection includes automatic retry logic and delays
-- Code follows Black formatting with 88-character line length
-- Use `make validate` to ensure data quality before proceeding to feature engineering
+## Pull Request Best Practices
+- Use descriptive PR titles following conventional commit format
+- Include clear description of changes and motivation
+- Add test plan with steps to verify changes
+- Request reviews from appropriate team members
+- Keep PRs focused and reasonably sized (< 500 lines when possible)
+- Update documentation if needed
+- Ensure CI/CD checks pass before requesting review
 
 ## Testing Strategy
+- Unit tests for all business logic using pytest
+- Integration tests for database operations with test database
+- Use pytest fixtures for test data setup and teardown
+- Mock external dependencies and API calls
+- Test database migrations both up and down
+- Use transaction rollback for test isolation
+- Maintain test coverage above 80%
+- End-to-end tests for critical data flows
 
-- Unit tests focus on data validation, feature engineering logic, and optimization constraints
-- Use `pytest tests/ -v` for detailed test output
-- Mock FPL API responses for reliable testing
-- Validate optimization solutions meet all FPL constraints
+## Deployment Notes
+- Environment-specific configurations using .env files
+- Database migration requirements and rollback procedures
+- Connection string management for different environments
+- Database backup strategies before major deployments
+- Environment variable management for secrets
+- Container considerations if using Docker
+- Database connection pooling configuration
+
+## Useful Commands
+```bash
+# Poetry dependency management
+poetry install              # Install dependencies
+poetry add package-name     # Add new dependency
+poetry add --group dev package-name  # Add dev dependency
+poetry shell               # Activate virtual environment
+
+# Testing
+pytest                     # Run all tests
+pytest -v                  # Verbose test output
+pytest --cov=src          # Run with coverage report
+pytest -k "test_name"      # Run specific test
+
+# Code quality
+black .                    # Format code
+ruff check .               # Lint code
+ruff check . --fix         # Fix linting issues
+mypy .                     # Type checking
+
+# Git workflow
+git checkout -b feature/description    # Create feature branch
+git add . && git commit -m "feat: add new feature"
+git push -u origin feature/description
+gh pr create --title "feat: add new feature" --body "Description"
+
+# Database operations
+alembic revision --autogenerate -m "description"  # Create migration
+alembic upgrade head       # Apply migrations
+alembic downgrade -1       # Rollback last migration
+
+# Development server (if applicable)
+python -m uvicorn main:app --reload  # FastAPI
+python manage.py runserver           # Django
+flask run                           # Flask
+```
+
+Copy this template to your project root as `CLAUDE.md` and customize it for your specific Python/SQL project. Update the sections with your specific framework choices, database schema details, and project-specific commands.

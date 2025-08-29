@@ -86,6 +86,14 @@ make data
    - Validate: sufficient rows for modeling (≥500 for limited data, ≥10,000 ideal)
    - Ensure lagged features have proper null handling for first gameweeks  
 
+**Testing Requirements:**
+- Unit tests for data cleaning logic (missing value handling, data type validation)
+- Test anti-leakage feature creation (verify lagged features exclude current GW)
+- Test rolling feature calculations with edge cases (single GW, insufficient data)
+- Test fixture difficulty mapping and feature creation
+- Test minutes likelihood probability calculations
+- Mock data pipeline integration tests
+
 **Command:**
 
 ```bash
@@ -124,6 +132,16 @@ make features
    - Save to `data/forecasts/expected_points.csv` with confidence intervals
    - Include model uncertainty and prediction intervals  
 
+**Testing Requirements:**
+- Unit tests for data loading and preparation (features.csv validation)
+- Test temporal data splitting (time-based vs player-based splits)
+- Mock model training with synthetic data (XGBoost and RandomForest fallback)
+- Test prediction generation and validation metrics
+- Test cross-validation implementation (leave-one-gameweek-out)
+- Test feature importance analysis and output validation
+- Integration tests for complete forecasting pipeline
+- Test error handling for missing data and edge cases
+
 **Command:**
 
 ```bash
@@ -146,6 +164,14 @@ make forecast
 4. Save selected squad: `output/team_gw{N}.csv`.  
 5. Validate: Exactly 15 players selected, budget within limit.  
 
+**Testing Requirements:**
+- Unit tests for MILP model setup and constraint validation
+- Test squad composition constraints (positions, team limits, budget)
+- Test optimization objective function and solver integration
+- Test solution validation and output formatting
+- Test edge cases (no feasible solution, budget constraints)
+- Mock data tests with known optimal solutions
+
 **Command:**
 
 ```bash
@@ -165,6 +191,15 @@ make optimise_gw N=1
 2. Maximise cumulative expected points over horizon H.  
 3. Save transfer plan + weekly squads: `output/plan_h{H}.csv`.  
 4. Validate: Constraints (budget, positions, transfers) respected.  
+
+**Testing Requirements:**
+- Unit tests for multi-GW MILP model setup and transfer constraints
+- Test transfer cost calculations and free transfer logic
+- Test chip usage constraints and point bonuses
+- Test horizon-based optimization objective
+- Test squad continuity between gameweeks
+- Test output validation for multi-gameweek plans
+- Integration tests with forecasting data
 
 **Command:**
 
@@ -253,6 +288,38 @@ poetry run python src/app.py --squad input.json
 ```bash
 make run_app
 ```
+
+---
+
+## 📍 Testing Standards & Best Practices
+
+**Testing Philosophy:**
+- **Comprehensive Coverage**: All phases require robust unit tests covering core functionality
+- **Anti-Leakage Validation**: Critical tests to ensure temporal data integrity in ML pipeline
+- **Edge Case Handling**: Tests for insufficient data, missing files, and constraint violations
+- **Integration Testing**: End-to-end pipeline validation with mock data
+- **Realistic Expectations**: Test targets aligned with FPL forecasting industry standards
+
+**Test Organization:**
+- `tests/test_feature_engineering.py` - Phase 2 feature engineering tests
+- `tests/test_forecasting.py` - Phase 3 ML forecasting tests  
+- `tests/test_single_gw_optimizer.py` - Phase 4 single GW optimization tests
+- `tests/test_multi_gw_optimizer.py` - Phase 5 multi-GW optimization tests
+- `tests/test_horizon_selection.py` - Phase 6 horizon selection tests
+- `tests/test_integration.py` - End-to-end pipeline integration tests
+
+**Key Testing Commands:**
+```bash
+make test           # Run all unit tests
+make test_coverage  # Generate coverage report
+pytest tests/ -v    # Verbose test output
+```
+
+**Quality Gates:**
+- All phases must have >80% test coverage before implementation
+- Tests must pass before any optimization phase begins
+- Critical path validation for data pipeline integrity
+- Performance benchmarks for optimization solve times
 
 ---
 
