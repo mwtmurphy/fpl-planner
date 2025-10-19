@@ -112,11 +112,6 @@ class TestFormAnalysisFilters:
         at = AppTest.from_file("app/pages/1_📊_Form_Analysis.py")
         at.run()
 
-        # Get initial player count
-        initial_metrics = at.metric
-        if len(initial_metrics) > 0:
-            initial_count_text = initial_metrics[0].value
-
         # Find and interact with position filter
         position_filters = [w for w in at.multiselect if "Position" in str(w.label)]
         if len(position_filters) > 0:

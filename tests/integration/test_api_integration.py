@@ -238,7 +238,6 @@ async def test_complete_workflow_integration(tmp_path):
     )
 
     storage = DataStorage(data_dir=tmp_path)
-    player_collector = PlayerCollector()
 
     # Fetch data
     bootstrap = await (await FPLClient().__aenter__()).get_bootstrap_static()

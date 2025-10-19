@@ -99,7 +99,9 @@ class TestStreamlitImports:
             from app.utils import data_loader, formatters
 
             # If we get here, no circular imports
-            assert True
+            assert streamlit_app is not None
+            assert data_loader is not None
+            assert formatters is not None
         except ImportError as e:
             if "cannot import" in str(e).lower() or "circular" in str(e).lower():
                 pytest.fail(f"Circular import detected: {e}")
@@ -157,3 +159,4 @@ class TestRelativeImportFunctionality:
         # Should handle pandas DataFrames
         # This is implicit - the function signature shows pd.DataFrame
         assert callable(apply_position_filter)
+        assert "DataFrame" in source  # Verify pandas usage in source

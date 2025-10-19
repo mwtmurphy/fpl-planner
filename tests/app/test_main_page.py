@@ -34,7 +34,8 @@ class TestMainAppRendering:
         at = AppTest.from_file("app/streamlit_app.py")
         at.run()
 
-        # Check for metrics (should have at least 4: Total Players, Avg Form, Avg Value, Avg Points)
+        # Check for metrics (should have at least 4:
+        # Total Players, Avg Form, Avg Value, Avg Points)
         assert (
             len(at.metric) >= 4
         ), f"Expected at least 4 metrics, found {len(at.metric)}"

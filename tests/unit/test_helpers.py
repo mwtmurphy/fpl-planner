@@ -253,32 +253,32 @@ def test_get_fixture_difficulty_label():
 def test_calculate_expected_points_forward():
     """Test expected points calculation for forward."""
     # Forward with 0.8 xG, 0.4 xA, 1.2 xGC
-    xP = calculate_expected_points("0.8", "0.4", "1.2", 4)
+    x_p = calculate_expected_points("0.8", "0.4", "1.2", 4)
 
     # xG * 4 = 3.2
     # xA * 3 = 1.2
     # CS = 0 (forwards don't get CS)
     # Total ≈ 4.4
-    assert 4.0 < xP < 5.0
+    assert 4.0 < x_p < 5.0
 
 
 def test_calculate_expected_points_defender():
     """Test expected points calculation for defender."""
     # Defender with 0.1 xG, 0.2 xA, 0.5 xGC
-    xP = calculate_expected_points("0.1", "0.2", "0.5", 2)
+    x_p = calculate_expected_points("0.1", "0.2", "0.5", 2)
 
     # xG * 6 = 0.6
     # xA * 3 = 0.6
     # CS prob = max(0, min(1, 1-0.5)) = 0.5
     # CS * 4 = 2.0
     # Total ≈ 3.2
-    assert 2.5 < xP < 4.0
+    assert 2.5 < x_p < 4.0
 
 
 def test_calculate_expected_points_invalid():
     """Test expected points with invalid data."""
-    xP = calculate_expected_points("invalid", "0.5", "1.0", 3)
-    assert xP == 0.0
+    x_p = calculate_expected_points("invalid", "0.5", "1.0", 3)
+    assert x_p == 0.0
 
 
 # Player status

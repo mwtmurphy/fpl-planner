@@ -359,7 +359,6 @@ async def test_rate_limiter_cleans_old_requests():
 async def test_rate_limiter_enforces_limit():
     """Test rate limiter waits when limit is exceeded."""
     import asyncio
-    from datetime import datetime
 
     from fpl.api.client import RateLimiter
 
@@ -372,8 +371,6 @@ async def test_rate_limiter_enforces_limit():
 
     # Third request should wait, but we'll use a timeout to verify
     # it would wait without actually waiting in the test
-    start = datetime.now()
-
     # Add a very short timeout to avoid long test execution
     # In real usage, it would wait the full duration
     with pytest.raises(asyncio.TimeoutError):
