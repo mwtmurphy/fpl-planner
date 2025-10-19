@@ -40,8 +40,7 @@ logging.basicConfig(
     handlers=[
         logging.StreamHandler(),
         logging.FileHandler(
-            Path("data/logs")
-            / f"update_{datetime.now().strftime('%Y%m%d_%H%M%S')}.log"
+            Path("data/logs") / f"update_{datetime.now().strftime('%Y%m%d_%H%M%S')}.log"
         ),
     ],
 )
@@ -145,7 +144,9 @@ async def update_all_players(
     Returns:
         Dict with summary statistics
     """
-    logger.info(f"Updating {len(players)} players with gameweeks since GW{since_gameweek}...")
+    logger.info(
+        f"Updating {len(players)} players with gameweeks since GW{since_gameweek}..."
+    )
 
     stats = {
         "total": len(players),
@@ -235,12 +236,18 @@ async def main_async(gameweeks: int) -> int:
     logger.info("Update Complete!")
     logger.info(f"Players processed: {stats['total']}")
     logger.info(f"Successfully updated: {stats['updated']}")
-    logger.info(f"Players who played: {stats['played']} ({stats['played']/stats['total']*100:.1f}%)")
-    logger.info(f"Players who didn't play: {stats['didnt_play']} ({stats['didnt_play']/stats['total']*100:.1f}%)")
+    logger.info(
+        f"Players who played: {stats['played']} ({stats['played']/stats['total']*100:.1f}%)"
+    )
+    logger.info(
+        f"Players who didn't play: {stats['didnt_play']} ({stats['didnt_play']/stats['total']*100:.1f}%)"
+    )
     logger.info(f"Total new gameweek entries: {stats['new_gameweeks']}")
     logger.info(f"Errors: {stats['errors']}")
     logger.info(f"Latest gameweek: {current_gw}")
-    logger.info(f"Total time: {int(elapsed.total_seconds() // 60)} min {int(elapsed.total_seconds() % 60)} sec")
+    logger.info(
+        f"Total time: {int(elapsed.total_seconds() // 60)} min {int(elapsed.total_seconds() % 60)} sec"
+    )
     logger.info("=" * 70)
 
     # Determine exit code

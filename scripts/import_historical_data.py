@@ -41,7 +41,9 @@ logging.basicConfig(
 logger = logging.getLogger(__name__)
 
 # Constants
-VAASTAV_BASE_URL = "https://raw.githubusercontent.com/vaastav/Fantasy-Premier-League/master/data"
+VAASTAV_BASE_URL = (
+    "https://raw.githubusercontent.com/vaastav/Fantasy-Premier-League/master/data"
+)
 SEASONS = [
     "2016-17",
     "2017-18",
@@ -110,7 +112,7 @@ def import_season(season: str, storage: DataStorage) -> tuple[bool, int]:
         logger.info(f"Downloading {season}...")
 
         # Try different encodings and error handling
-        encodings = ['utf-8', 'latin-1', 'iso-8859-1', 'cp1252']
+        encodings = ["utf-8", "latin-1", "iso-8859-1", "cp1252"]
         df = None
 
         for encoding in encodings:
@@ -118,8 +120,8 @@ def import_season(season: str, storage: DataStorage) -> tuple[bool, int]:
                 df = pd.read_csv(
                     url,
                     encoding=encoding,
-                    on_bad_lines='skip',  # Skip problematic lines
-                    low_memory=False
+                    on_bad_lines="skip",  # Skip problematic lines
+                    low_memory=False,
                 )
                 break
             except (UnicodeDecodeError, pd.errors.ParserError):

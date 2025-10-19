@@ -35,9 +35,12 @@ st.sidebar.header("Filters")
 
 # Season filter
 from fpl.data.historical import HistoricalDataManager
+
 manager = HistoricalDataManager()
 available_seasons = manager.get_available_seasons()
-season_options = ["2024-25 (Current)"] + available_seasons[::-1]  # Reverse to show newest first
+season_options = ["2024-25 (Current)"] + available_seasons[
+    ::-1
+]  # Reverse to show newest first
 
 selected_season = st.sidebar.selectbox(
     "Season",
@@ -69,7 +72,9 @@ st.sidebar.divider()
 
 # Load data based on filters
 with st.spinner("Loading player data..."):
-    if selected_season == "2024-25 (Current)" and selected_gw == (current_gw if current_gw else 38):
+    if selected_season == "2024-25 (Current)" and selected_gw == (
+        current_gw if current_gw else 38
+    ):
         # Load current full data
         df, teams_dict, last_update = load_all_data()
     else:
@@ -105,7 +110,9 @@ filtered_df = apply_position_filter(filtered_df, selected_positions)
 filtered_df = apply_team_filter(filtered_df, selected_teams)
 
 # Sort by form (games) descending (default sort)
-filtered_df = filtered_df.sort_values("form_games", ascending=False).reset_index(drop=True)
+filtered_df = filtered_df.sort_values("form_games", ascending=False).reset_index(
+    drop=True
+)
 
 # METRICS ROW
 st.subheader("Summary Metrics")
@@ -184,7 +191,8 @@ column_config = {
         format="%.1f%%",
     ),
     "status_circle": st.column_config.TextColumn(
-        "Status", help="Player status (🟢 available, 🟡 doubtful, 🔴 injured/unavailable)"
+        "Status",
+        help="Player status (🟢 available, 🟡 doubtful, 🔴 injured/unavailable)",
     ),
 }
 
@@ -192,7 +200,7 @@ column_config = {
 st.dataframe(
     filtered_df[display_columns],
     column_config=column_config,
-    width='stretch',
+    width="stretch",
     hide_index=True,
     height=600,
 )
@@ -205,7 +213,7 @@ st.download_button(
     data=csv,
     file_name=f"fpl_form_analysis_{last_update.replace(' ', '_').replace(':', '-')}.csv",
     mime="text/csv",
-    width='stretch',
+    width="stretch",
 )
 
 # INSIGHTS
@@ -225,7 +233,9 @@ if len(filtered_df) > 0:
 
     with col2:
         st.markdown("**Top 5 By Value (games)**")
-        top_5_value = filtered_df.nlargest(5, "value_games")[["name", "team_name", "position", "value_games"]]
+        top_5_value = filtered_df.nlargest(5, "value_games")[
+            ["name", "team_name", "position", "value_games"]
+        ]
         for idx, row in top_5_value.iterrows():
             st.markdown(
                 f"- **{row['name']}** ({row['team_name']}, {row['position']}) - {row['value_games']:.1f}"

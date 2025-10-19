@@ -67,7 +67,10 @@ class TestStreamlitImports:
             content = f.read()
 
         # Verify absolute imports are used (workspace standard)
-        assert "from app.utils.data_loader import" in content or "from app.utils.formatters import" in content
+        assert (
+            "from app.utils.data_loader import" in content
+            or "from app.utils.formatters import" in content
+        )
         # Verify sys.path setup is present
         assert "sys.path.insert(0, str(project_root))" in content
         # Verify path calculation is correct for pages/ (parent.parent.parent)

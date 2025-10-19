@@ -20,10 +20,12 @@ from fpl.data.storage import DataStorage
 
 
 # Initialize session state with defaults
-initialize_session_state({
-    "debug_mode": False,
-    "last_refresh": None,
-})
+initialize_session_state(
+    {
+        "debug_mode": False,
+        "last_refresh": None,
+    }
+)
 
 
 def home_page():
@@ -144,7 +146,9 @@ def home_page():
 
             # Historical data info
             if summary["historical_seasons"] > 0:
-                st.caption(f"📚 Historical: {summary['historical_seasons']} seasons ({', '.join(summary['available_seasons'][-3:])}...)")
+                st.caption(
+                    f"📚 Historical: {summary['historical_seasons']} seasons ({', '.join(summary['available_seasons'][-3:])}...)"
+                )
 
             # Update instructions
             with st.expander("🔄 Update Data"):
@@ -190,9 +194,12 @@ def home_page():
                     """
                 )
 
-        if st.button("🔄 Refresh App", key="refresh_app_button", use_container_width=True):
+        if st.button(
+            "🔄 Refresh App", key="refresh_app_button", use_container_width=True
+        ):
             st.cache_data.clear()
             from datetime import datetime
+
             st.session_state.last_refresh = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
             st.rerun()
 

@@ -210,9 +210,7 @@ class TestDisplayDataframeWithDownload:
         df = pd.DataFrame({"col": [1, 2]})
 
         with patch("app.utils.components.st") as mock_st:
-            display_dataframe_with_download(
-                df, "Table", filename="custom.csv"
-            )
+            display_dataframe_with_download(df, "Table", filename="custom.csv")
 
             call_args = mock_st.download_button.call_args
             assert call_args[1]["file_name"] == "custom.csv"
@@ -228,7 +226,9 @@ class TestCreateDataTable:
         df = pd.DataFrame({"name": ["Alice", "Bob"], "age": [25, 30]})
 
         with patch("app.utils.components.st") as mock_st:
-            result = create_data_table(df, "Users", show_download=False, show_search=False)
+            result = create_data_table(
+                df, "Users", show_download=False, show_search=False
+            )
 
             # Returns dataframe
             assert result.equals(df)
@@ -247,7 +247,9 @@ class TestCreateDataTable:
             # Mock search input
             mock_st.text_input.return_value = "Alice"
 
-            result = create_data_table(df, "Users", show_search=True, show_download=False)
+            result = create_data_table(
+                df, "Users", show_search=True, show_download=False
+            )
 
             # Search input created
             mock_st.text_input.assert_called_once()

@@ -27,9 +27,7 @@ class Player(BaseModel):
 
     # Team and Position
     team: int = Field(..., description="Team ID (1-20)")
-    element_type: int = Field(
-        ..., description="Position (1=GK, 2=DEF, 3=MID, 4=FWD)"
-    )
+    element_type: int = Field(..., description="Position (1=GK, 2=DEF, 3=MID, 4=FWD)")
 
     # Pricing and Ownership
     now_cost: int = Field(..., description="Current price in 0.1m units")
@@ -173,7 +171,9 @@ class Gameweek(BaseModel):
 
     # Statistics
     average_entry_score: int = Field(ge=0, description="Average manager score")
-    highest_score: Optional[int] = Field(None, ge=0, description="Highest manager score")
+    highest_score: Optional[int] = Field(
+        None, ge=0, description="Highest manager score"
+    )
     most_selected: Optional[int] = Field(None, description="Most selected player ID")
     most_transferred_in: Optional[int] = Field(
         None, description="Most transferred in player ID"
@@ -215,8 +215,12 @@ class Fixture(BaseModel):
     # Teams
     team_h: int = Field(..., description="Home team ID")
     team_a: int = Field(..., description="Away team ID")
-    team_h_difficulty: int = Field(..., ge=1, le=5, description="Home team difficulty (1-5)")
-    team_a_difficulty: int = Field(..., ge=1, le=5, description="Away team difficulty (1-5)")
+    team_h_difficulty: int = Field(
+        ..., ge=1, le=5, description="Home team difficulty (1-5)"
+    )
+    team_a_difficulty: int = Field(
+        ..., ge=1, le=5, description="Away team difficulty (1-5)"
+    )
 
     # Status
     started: bool = Field(default=False)

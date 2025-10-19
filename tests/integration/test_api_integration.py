@@ -133,12 +133,16 @@ async def test_player_collector_integration():
     # Test position filtering
     goalkeepers = await collector.collect_by_position(1)
     assert all(p.element_type == 1 for p in goalkeepers)
-    assert 60 <= len(goalkeepers) <= 100  # Premier League expanded squads (includes backup/3rd GKs)
+    assert (
+        60 <= len(goalkeepers) <= 100
+    )  # Premier League expanded squads (includes backup/3rd GKs)
 
     # Test team filtering
     team_players = await collector.collect_by_team(1)
     assert all(p.team == 1 for p in team_players)
-    assert 15 <= len(team_players) <= 150  # Squad size (includes historical/inactive players in FPL data)
+    assert (
+        15 <= len(team_players) <= 150
+    )  # Squad size (includes historical/inactive players in FPL data)
 
 
 @pytest.mark.asyncio

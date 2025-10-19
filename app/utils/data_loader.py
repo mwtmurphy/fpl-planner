@@ -27,7 +27,9 @@ from fpl.utils.helpers import (
 
 
 @st.cache_data(ttl=3600)  # Cache for 1 hour
-def load_all_data(use_local_data: bool = True) -> tuple[pd.DataFrame, dict[int, str], str]:
+def load_all_data(
+    use_local_data: bool = True,
+) -> tuple[pd.DataFrame, dict[int, str], str]:
     """Load all player and team data with caching.
 
     Args:
@@ -105,15 +107,13 @@ def _load_from_local_storage(
 
         # Calculate form metrics
         form_fixtures_val = calculate_form_fixtures(history, n=5) if history else 0.0
-        form_games_val = calculate_form_games(history, n=5) if history else float(
-            p.get("form", 0)
+        form_games_val = (
+            calculate_form_games(history, n=5) if history else float(p.get("form", 0))
         )  # Fallback to API form
 
         # Calculate value metrics
         value_fixtures = (
-            float(calculate_value(Decimal(price), total_points))
-            if price > 0
-            else 0.0
+            float(calculate_value(Decimal(price), total_points)) if price > 0 else 0.0
         )
         value_games = (
             (form_games_val * 38 / price) if price > 0 and form_games_val > 0 else 0.0
@@ -314,9 +314,7 @@ def load_snapshot_data(
                         "price_formatted": f"£{price:.1f}m",
                         "total_points": total_points,
                         "form_fixtures": 0.0,  # TODO: Calculate from history
-                        "value_fixtures": (
-                            total_points / price if price > 0 else 0.0
-                        ),
+                        "value_fixtures": (total_points / price if price > 0 else 0.0),
                         "form_games": 0.0,  # TODO: Calculate from history
                         "value_games": 0.0,
                         "form": 0.0,

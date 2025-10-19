@@ -251,27 +251,29 @@ class AsyncContextManagerMock:
 @pytest.fixture
 def sample_dataframe():
     """Provide sample DataFrame for Streamlit testing."""
-    return pd.DataFrame({
-        "name": ["Salah", "Haaland", "Saka"],
-        "team_name": ["Liverpool", "Man City", "Arsenal"],
-        "team_id": [10, 11, 1],
-        "position": ["MID", "FWD", "MID"],
-        "price": [13.0, 15.0, 9.5],
-        "price_formatted": ["£13.0m", "£15.0m", "£9.5m"],
-        "total_points": [186, 210, 150],
-        "form_fixtures": [8.5, 10.2, 7.3],
-        "value_fixtures": [14.3, 14.0, 15.8],
-        "form_games": [8.5, 10.2, 7.3],
-        "value_games": [49.0, 51.5, 46.8],
-        "form": [8.5, 10.2, 7.3],
-        "form_rating": ["Hot", "Hot", "Good"],
-        "value": [14.3, 14.0, 15.8],
-        "ownership": [45.2, 62.8, 35.1],
-        "status": ["a", "a", "a"],
-        "status_emoji": ["✅", "✅", "✅"],
-        "status_circle": ["🟢", "🟢", "🟢"],
-        "minutes": [2340, 2520, 2100],
-    })
+    return pd.DataFrame(
+        {
+            "name": ["Salah", "Haaland", "Saka"],
+            "team_name": ["Liverpool", "Man City", "Arsenal"],
+            "team_id": [10, 11, 1],
+            "position": ["MID", "FWD", "MID"],
+            "price": [13.0, 15.0, 9.5],
+            "price_formatted": ["£13.0m", "£15.0m", "£9.5m"],
+            "total_points": [186, 210, 150],
+            "form_fixtures": [8.5, 10.2, 7.3],
+            "value_fixtures": [14.3, 14.0, 15.8],
+            "form_games": [8.5, 10.2, 7.3],
+            "value_games": [49.0, 51.5, 46.8],
+            "form": [8.5, 10.2, 7.3],
+            "form_rating": ["Hot", "Hot", "Good"],
+            "value": [14.3, 14.0, 15.8],
+            "ownership": [45.2, 62.8, 35.1],
+            "status": ["a", "a", "a"],
+            "status_emoji": ["✅", "✅", "✅"],
+            "status_circle": ["🟢", "🟢", "🟢"],
+            "minutes": [2340, 2520, 2100],
+        }
+    )
 
 
 @pytest.fixture
@@ -298,6 +300,7 @@ def reset_streamlit_cache():
     """
     try:
         import streamlit as st
+
         # Clear all caches
         st.cache_data.clear()
         st.cache_resource.clear()
@@ -316,7 +319,8 @@ def reset_session_state():
     """
     try:
         import streamlit as st
-        if hasattr(st, 'session_state'):
+
+        if hasattr(st, "session_state"):
             # Clear session state
             for key in list(st.session_state.keys()):
                 del st.session_state[key]
@@ -337,8 +341,10 @@ def mock_load_all_data(sample_dataframe, sample_teams_dict):
         >>> def test_something(mock_load_all_data, mocker):
         ...     mocker.patch('app.utils.data_loader.load_all_data', mock_load_all_data)
     """
+
     def _load_all_data():
         return sample_dataframe, sample_teams_dict, "2025-10-18 12:00"
+
     return _load_all_data
 
 
@@ -349,6 +355,8 @@ def mock_empty_data():
     Returns empty DataFrame and teams dict for testing
     how app handles no data scenarios.
     """
+
     def _load_empty_data():
         return pd.DataFrame(), {}, "2025-10-18 12:00"
+
     return _load_empty_data

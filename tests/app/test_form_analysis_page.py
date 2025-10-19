@@ -34,7 +34,9 @@ class TestFormAnalysisPageRendering:
         # Check for filter widgets (selectbox, multiselect)
         # Should have at least: Season, Gameweek, Position, Team filters
         total_filters = len(at.selectbox) + len(at.multiselect)
-        assert total_filters >= 4, f"Expected at least 4 filter widgets, found {total_filters}"
+        assert (
+            total_filters >= 4
+        ), f"Expected at least 4 filter widgets, found {total_filters}"
 
     def test_page_displays_metrics(self):
         """Test that summary metrics are displayed."""
@@ -42,7 +44,9 @@ class TestFormAnalysisPageRendering:
         at.run()
 
         # Check for metrics (Players Shown, Avg Form, Top Player, Avg Value)
-        assert len(at.metric) >= 4, f"Expected at least 4 metrics, found {len(at.metric)}"
+        assert (
+            len(at.metric) >= 4
+        ), f"Expected at least 4 metrics, found {len(at.metric)}"
 
     def test_page_displays_dataframe(self):
         """Test that player data table is displayed."""
@@ -163,14 +167,18 @@ class TestFormAnalysisInsights:
         with open("app/pages/1_📊_Form_Analysis.py") as f:
             content = f.read()
 
-        assert "Top 5 By Form" in content or "Top 5" in content, "Page should show top performers"
+        assert (
+            "Top 5 By Form" in content or "Top 5" in content
+        ), "Page should show top performers"
 
     def test_page_shows_top_5_by_value(self):
         """Test that page displays top 5 players by value."""
         with open("app/pages/1_📊_Form_Analysis.py") as f:
             content = f.read()
 
-        assert "Top 5 By Value" in content or "value_games" in content, "Page should show top value players"
+        assert (
+            "Top 5 By Value" in content or "value_games" in content
+        ), "Page should show top value players"
 
 
 class TestFormAnalysisSessionState:

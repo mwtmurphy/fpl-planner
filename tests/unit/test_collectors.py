@@ -13,7 +13,9 @@ from fpl.core.models import Player, PlayerHistory, Fixture
 
 
 @pytest.mark.asyncio
-async def test_player_collector_collect_all(httpx_mock: HTTPXMock, sample_player_data, sample_team_data):
+async def test_player_collector_collect_all(
+    httpx_mock: HTTPXMock, sample_player_data, sample_team_data
+):
     """Test collecting all players."""
     # Build response manually to avoid datetime serialization issues
     response = {
@@ -36,7 +38,9 @@ async def test_player_collector_collect_all(httpx_mock: HTTPXMock, sample_player
 
 
 @pytest.mark.asyncio
-async def test_player_collector_with_client(httpx_mock: HTTPXMock, sample_player_data, sample_team_data):
+async def test_player_collector_with_client(
+    httpx_mock: HTTPXMock, sample_player_data, sample_team_data
+):
     """Test collector with injected client."""
     response = {
         "elements": [sample_player_data],
@@ -57,7 +61,9 @@ async def test_player_collector_with_client(httpx_mock: HTTPXMock, sample_player
 
 
 @pytest.mark.asyncio
-async def test_player_collector_by_team(httpx_mock: HTTPXMock, sample_player_data, sample_team_data):
+async def test_player_collector_by_team(
+    httpx_mock: HTTPXMock, sample_player_data, sample_team_data
+):
     """Test collecting players by team."""
     # Add second player for different team
     player2 = sample_player_data.copy()
@@ -83,7 +89,9 @@ async def test_player_collector_by_team(httpx_mock: HTTPXMock, sample_player_dat
 
 
 @pytest.mark.asyncio
-async def test_player_collector_by_position(httpx_mock: HTTPXMock, sample_player_data, sample_team_data):
+async def test_player_collector_by_position(
+    httpx_mock: HTTPXMock, sample_player_data, sample_team_data
+):
     """Test collecting players by position."""
     # Add second player for different position
     player2 = sample_player_data.copy()
@@ -162,7 +170,9 @@ async def test_player_collector_history(httpx_mock: HTTPXMock):
 
 
 @pytest.mark.asyncio
-async def test_player_collector_changed_players_all(httpx_mock: HTTPXMock, sample_player_data, sample_team_data):
+async def test_player_collector_changed_players_all(
+    httpx_mock: HTTPXMock, sample_player_data, sample_team_data
+):
     """Test collecting changed players with no timestamp returns all."""
     response = {
         "elements": [sample_player_data],
@@ -182,7 +192,9 @@ async def test_player_collector_changed_players_all(httpx_mock: HTTPXMock, sampl
 
 
 @pytest.mark.asyncio
-async def test_player_collector_changed_players_filtered(httpx_mock: HTTPXMock, sample_player_data, sample_team_data):
+async def test_player_collector_changed_players_filtered(
+    httpx_mock: HTTPXMock, sample_player_data, sample_team_data
+):
     """Test collecting only changed players."""
     # Add multiple players with different change indicators
     player1 = sample_player_data.copy()
@@ -227,7 +239,9 @@ async def test_player_collector_changed_players_filtered(httpx_mock: HTTPXMock, 
 
 
 @pytest.mark.asyncio
-async def test_player_collector_top_performers(httpx_mock: HTTPXMock, sample_player_data, sample_team_data):
+async def test_player_collector_top_performers(
+    httpx_mock: HTTPXMock, sample_player_data, sample_team_data
+):
     """Test collecting top performers by metric."""
     # Add multiple players with different points
     player1 = sample_player_data.copy()
@@ -262,7 +276,9 @@ async def test_player_collector_top_performers(httpx_mock: HTTPXMock, sample_pla
 
 
 @pytest.mark.asyncio
-async def test_player_collector_top_performers_by_form(httpx_mock: HTTPXMock, sample_player_data, sample_team_data):
+async def test_player_collector_top_performers_by_form(
+    httpx_mock: HTTPXMock, sample_player_data, sample_team_data
+):
     """Test collecting top performers by form (string metric)."""
     player1 = sample_player_data.copy()
     player1["id"] = 302
@@ -295,7 +311,9 @@ async def test_player_collector_top_performers_by_form(httpx_mock: HTTPXMock, sa
 
 
 @pytest.mark.asyncio
-async def test_fixture_collector_collect_all(httpx_mock: HTTPXMock, sample_fixture_data):
+async def test_fixture_collector_collect_all(
+    httpx_mock: HTTPXMock, sample_fixture_data
+):
     """Test collecting all fixtures."""
     httpx_mock.add_response(
         url="https://fantasy.premierleague.com/api/fixtures/",
@@ -311,7 +329,9 @@ async def test_fixture_collector_collect_all(httpx_mock: HTTPXMock, sample_fixtu
 
 
 @pytest.mark.asyncio
-async def test_fixture_collector_by_gameweek(httpx_mock: HTTPXMock, sample_fixture_data):
+async def test_fixture_collector_by_gameweek(
+    httpx_mock: HTTPXMock, sample_fixture_data
+):
     """Test collecting fixtures by gameweek."""
     httpx_mock.add_response(
         url="https://fantasy.premierleague.com/api/fixtures/?event=1",
@@ -440,7 +460,9 @@ async def test_fixture_collector_by_team(httpx_mock: HTTPXMock, sample_fixture_d
 
 
 @pytest.mark.asyncio
-async def test_fixture_collector_by_difficulty(httpx_mock: HTTPXMock, sample_fixture_data):
+async def test_fixture_collector_by_difficulty(
+    httpx_mock: HTTPXMock, sample_fixture_data
+):
     """Test collecting fixtures by difficulty."""
     fixture1 = sample_fixture_data.copy()
     fixture1["id"] = 1
@@ -458,14 +480,18 @@ async def test_fixture_collector_by_difficulty(httpx_mock: HTTPXMock, sample_fix
     )
 
     collector = FixtureCollector()
-    easy_fixtures = await collector.collect_by_difficulty(min_difficulty=1, max_difficulty=2)
+    easy_fixtures = await collector.collect_by_difficulty(
+        min_difficulty=1, max_difficulty=2
+    )
 
     assert len(easy_fixtures) == 1
     assert easy_fixtures[0].team_h_difficulty == 2
 
 
 @pytest.mark.asyncio
-async def test_fixture_collector_by_difficulty_for_team(httpx_mock: HTTPXMock, sample_fixture_data):
+async def test_fixture_collector_by_difficulty_for_team(
+    httpx_mock: HTTPXMock, sample_fixture_data
+):
     """Test collecting fixtures by difficulty for specific team."""
     fixture1 = sample_fixture_data.copy()
     fixture1["id"] = 1

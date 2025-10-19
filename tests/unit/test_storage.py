@@ -369,7 +369,7 @@ def test_save_dataframe_json(temp_storage, sample_players):
 
 @pytest.mark.skipif(
     not hasattr(pd, "read_parquet"),
-    reason="Parquet support requires pyarrow or fastparquet"
+    reason="Parquet support requires pyarrow or fastparquet",
 )
 def test_save_dataframe_parquet(temp_storage, sample_players):
     """Test saving DataFrame as Parquet."""

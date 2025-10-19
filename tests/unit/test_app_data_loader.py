@@ -98,7 +98,11 @@ class TestLoadAllData:
     @patch("app.utils.data_loader.PlayerCollector")
     @patch("app.utils.data_loader.FPLClient")
     def test_load_all_data_success(
-        self, mock_client_class, mock_collector_class, mock_bootstrap_data, mock_player_data
+        self,
+        mock_client_class,
+        mock_collector_class,
+        mock_bootstrap_data,
+        mock_player_data,
     ):
         """Test successful data loading."""
         # Setup mock collector
@@ -150,7 +154,11 @@ class TestLoadAllData:
     @patch("app.utils.data_loader.PlayerCollector")
     @patch("app.utils.data_loader.FPLClient")
     def test_load_all_data_player_transformation(
-        self, mock_client_class, mock_collector_class, mock_bootstrap_data, mock_player_data
+        self,
+        mock_client_class,
+        mock_collector_class,
+        mock_bootstrap_data,
+        mock_player_data,
     ):
         """Test player data is correctly transformed to DataFrame."""
         # Setup mocks
@@ -233,7 +241,11 @@ class TestLoadAllData:
     @patch("app.utils.data_loader.PlayerCollector")
     @patch("app.utils.data_loader.FPLClient")
     def test_load_all_data_value_calculation(
-        self, mock_client_class, mock_collector_class, mock_bootstrap_data, mock_player_data
+        self,
+        mock_client_class,
+        mock_collector_class,
+        mock_bootstrap_data,
+        mock_player_data,
     ):
         """Test value calculation in loaded data."""
         # Setup mocks
@@ -261,7 +273,11 @@ class TestLoadAllData:
     @patch("app.utils.data_loader.PlayerCollector")
     @patch("app.utils.data_loader.FPLClient")
     def test_load_all_data_timestamp_format(
-        self, mock_client_class, mock_collector_class, mock_bootstrap_data, mock_player_data
+        self,
+        mock_client_class,
+        mock_collector_class,
+        mock_bootstrap_data,
+        mock_player_data,
     ):
         """Test last_update timestamp format."""
         # Setup mocks
@@ -293,7 +309,11 @@ class TestLoadAllData:
     @patch("app.utils.data_loader.PlayerCollector")
     @patch("app.utils.data_loader.FPLClient")
     def test_load_all_data_teams_dict(
-        self, mock_client_class, mock_collector_class, mock_bootstrap_data, mock_player_data
+        self,
+        mock_client_class,
+        mock_collector_class,
+        mock_bootstrap_data,
+        mock_player_data,
     ):
         """Test teams dictionary creation."""
         # Add more teams to mock data

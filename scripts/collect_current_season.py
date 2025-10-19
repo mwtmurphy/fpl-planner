@@ -48,7 +48,9 @@ logging.basicConfig(
 logger = logging.getLogger(__name__)
 
 
-async def collect_bootstrap_data(client: FPLClient) -> tuple[list[Player], list[Team], list[Gameweek]]:
+async def collect_bootstrap_data(
+    client: FPLClient,
+) -> tuple[list[Player], list[Team], list[Gameweek]]:
     """Collect bootstrap-static data.
 
     Args:
@@ -64,7 +66,9 @@ async def collect_bootstrap_data(client: FPLClient) -> tuple[list[Player], list[
     teams = [Team(**t) for t in data["teams"]]
     gameweeks = [Gameweek(**gw) for gw in data["events"]]
 
-    logger.info(f"✓ Found {len(players)} players, {len(teams)} teams, {len(gameweeks)} gameweeks")
+    logger.info(
+        f"✓ Found {len(players)} players, {len(teams)} teams, {len(gameweeks)} gameweeks"
+    )
 
     return players, teams, gameweeks
 
@@ -106,9 +110,7 @@ async def collect_all_player_histories(
     existing_histories = set()
     player_histories_dir = Path("data/current/player_histories")
     if player_histories_dir.exists():
-        existing_histories = {
-            int(f.stem) for f in player_histories_dir.glob("*.json")
-        }
+        existing_histories = {int(f.stem) for f in player_histories_dir.glob("*.json")}
 
     players_to_fetch = [p for p in players if p.id not in existing_histories]
 
@@ -126,7 +128,9 @@ async def collect_all_player_histories(
         histories = {}
         errors = []
 
-        with tqdm(total=len(players_to_fetch), desc="Collecting player histories") as pbar:
+        with tqdm(
+            total=len(players_to_fetch), desc="Collecting player histories"
+        ) as pbar:
             for player in players_to_fetch:
                 player_id, history = await collect_player_history(client, player.id)
 
@@ -196,7 +200,9 @@ async def main_async() -> int:
     logger.info(f"Players: {len(players)}")
     logger.info(f"Histories collected: {len(histories)}")
     logger.info(f"Current gameweek: {current_gw.id if current_gw else 'Unknown'}")
-    logger.info(f"Total time: {int(elapsed.total_seconds() // 60)} min {int(elapsed.total_seconds() % 60)} sec")
+    logger.info(
+        f"Total time: {int(elapsed.total_seconds() // 60)} min {int(elapsed.total_seconds() % 60)} sec"
+    )
     logger.info(f"Saved to: data/current/")
     logger.info("=" * 70)
 

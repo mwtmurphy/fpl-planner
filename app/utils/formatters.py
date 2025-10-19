@@ -3,7 +3,9 @@
 import pandas as pd
 
 
-def apply_position_filter(df: pd.DataFrame, selected_positions: list[str]) -> pd.DataFrame:
+def apply_position_filter(
+    df: pd.DataFrame, selected_positions: list[str]
+) -> pd.DataFrame:
     """Apply position filter to DataFrame.
 
     Args:

@@ -2,9 +2,9 @@
 
 from datetime import datetime
 from decimal import Decimal
-from typing import Optional, Any
+from typing import Any, Optional
 
-from fpl.core.models import Player, Team, Gameweek, Fixture
+from fpl.core.models import Gameweek, Team
 
 
 def format_price(now_cost: int) -> str:
@@ -202,9 +202,15 @@ def format_deadline_countdown(deadline: datetime) -> str:
     minutes = (delta.seconds % 3600) // 60
 
     if days > 0:
-        return f"{days} day{'s' if days != 1 else ''}, {hours} hour{'s' if hours != 1 else ''}"
+        return (
+            f"{days} day{'s' if days != 1 else ''}, "
+            f"{hours} hour{'s' if hours != 1 else ''}"
+        )
     elif hours > 0:
-        return f"{hours} hour{'s' if hours != 1 else ''}, {minutes} minute{'s' if minutes != 1 else ''}"
+        return (
+            f"{hours} hour{'s' if hours != 1 else ''}, "
+            f"{minutes} minute{'s' if minutes != 1 else ''}"
+        )
     else:
         return f"{minutes} minute{'s' if minutes != 1 else ''}"
 
@@ -412,9 +418,7 @@ def get_player_status_circle(status: str) -> str:
     return status_map.get(status, "⚪")
 
 
-def calculate_form_fixtures(
-    player_history: list[dict[str, Any]], n: int = 5
-) -> float:
+def calculate_form_fixtures(player_history: list[dict[str, Any]], n: int = 5) -> float:
     """Calculate average points from last N fixtures (including 0s when didn't play).
 
     This is fixture-based form that includes all gameweeks in the calculation,

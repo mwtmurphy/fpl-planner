@@ -1,13 +1,13 @@
 """Core domain models for FPL data."""
 
 from fpl.core.models import (
-    Player,
-    Team,
-    Gameweek,
     Fixture,
-    PlayerHistory,
+    Gameweek,
     ManagerPick,
     ManagerTeam,
+    Player,
+    PlayerHistory,
+    Team,
 )
 
 __all__ = [
