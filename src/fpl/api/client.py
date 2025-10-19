@@ -5,6 +5,7 @@ Premier League API. See .claude/fpl_api_reference.md for endpoint details.
 """
 
 import asyncio
+import logging
 from collections import deque
 from datetime import datetime, timedelta
 from typing import Any, Optional
@@ -18,6 +19,8 @@ from fpl.api.exceptions import (
     RateLimitError,
     ServerError,
 )
+
+logger = logging.getLogger(__name__)
 
 
 class RateLimiter:
@@ -111,16 +114,51 @@ class FPLClient:
             response = await self.client.get(url)
 
             if response.status_code == 404:
+                logger.error(
+                    "Resource not found",
+                    extra={
+                        "url": url,
+                        "endpoint": endpoint_key,
+                        "params": url_params,
+                        "status_code": 404,
+                    },
+                )
                 raise NotFoundError(f"Resource not found: {url}")
             elif response.status_code == 429:
+                logger.warning(
+                    "API rate limit exceeded",
+                    extra={
+                        "url": url,
+                        "endpoint": endpoint_key,
+                        "retry_after": response.headers.get("Retry-After"),
+                    },
+                )
                 raise RateLimitError("API rate limit exceeded")
             elif response.status_code >= 500:
+                logger.error(
+                    "Server error",
+                    extra={
+                        "url": url,
+                        "endpoint": endpoint_key,
+                        "status_code": response.status_code,
+                        "response_body": response.text[:500],  # First 500 chars
+                    },
+                )
                 raise ServerError(f"Server error: {response.status_code}")
 
             response.raise_for_status()
             return response.json()
 
         except httpx.HTTPError as e:
+            logger.error(
+                "HTTP error occurred",
+                extra={
+                    "url": url,
+                    "endpoint": endpoint_key,
+                    "error_type": type(e).__name__,
+                    "error_message": str(e),
+                },
+            )
             raise FPLAPIError(f"HTTP error: {e}") from e
 
     async def get_bootstrap_static(self) -> dict[str, Any]:
@@ -136,9 +174,7 @@ class FPLClient:
         """
         return await self._request("bootstrap_static")
 
-    async def get_fixtures(
-        self, event: Optional[int] = None
-    ) -> list[dict[str, Any]]:
+    async def get_fixtures(self, event: Optional[int] = None) -> list[dict[str, Any]]:
         """Get fixture data.
 
         Args:
@@ -195,9 +231,7 @@ class FPLClient:
         """
         return await self._request("manager_history", manager_id=manager_id)
 
-    async def get_manager_picks(
-        self, manager_id: int, event_id: int
-    ) -> dict[str, Any]:
+    async def get_manager_picks(self, manager_id: int, event_id: int) -> dict[str, Any]:
         """Get manager's team picks for specific gameweek.
 
         Args:
@@ -222,9 +256,7 @@ class FPLClient:
         """
         return await self._request("manager_transfers", manager_id=manager_id)
 
-    async def get_classic_league(
-        self, league_id: int, page: int = 1
-    ) -> dict[str, Any]:
+    async def get_classic_league(self, league_id: int, page: int = 1) -> dict[str, Any]:
         """Get classic league standings.
 
         Args:
