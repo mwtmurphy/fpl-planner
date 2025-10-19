@@ -10,10 +10,9 @@ Usage:
 import pytest
 
 from fpl.api.client import FPLClient
-from fpl.core.models import Player, Team, Fixture, Gameweek
-from fpl.data.collectors import PlayerCollector, FixtureCollector
+from fpl.core.models import Fixture, Gameweek, Player, Team
+from fpl.data.collectors import FixtureCollector, PlayerCollector
 from fpl.data.storage import DataStorage
-
 
 # Skip all integration tests by default
 pytestmark = pytest.mark.integration

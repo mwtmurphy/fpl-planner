@@ -1,7 +1,5 @@
 """Integration tests for Streamlit app imports."""
 
-import importlib
-import sys
 from pathlib import Path
 
 import pytest
@@ -24,8 +22,8 @@ class TestStreamlitImports:
         try:
             from app.utils.formatters import (
                 apply_position_filter,
-                apply_team_filter,
                 apply_price_bracket_filter,
+                apply_team_filter,
             )
 
             assert callable(apply_position_filter)
@@ -97,8 +95,8 @@ class TestStreamlitImports:
         """Test that there are no circular import issues."""
         try:
             # Try importing all modules in sequence
-            from app.utils import data_loader, formatters
             from app import streamlit_app
+            from app.utils import data_loader, formatters
 
             # If we get here, no circular imports
             assert True
@@ -149,9 +147,9 @@ class TestRelativeImportFunctionality:
 
     def test_formatters_use_pandas(self):
         """Test that formatters correctly import pandas."""
-        from app.utils.formatters import apply_position_filter
-
         import inspect
+
+        from app.utils.formatters import apply_position_filter
 
         # Get the module source
         source = inspect.getsource(apply_position_filter)

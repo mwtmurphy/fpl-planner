@@ -13,7 +13,6 @@ Run with: poetry run python scripts/validate_streamlit_pages.py
 
 import sys
 from pathlib import Path
-from typing import Optional
 
 # Add project root to path
 project_root = Path(__file__).parent.parent

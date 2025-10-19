@@ -27,7 +27,7 @@ except ImportError:
     sys.exit(1)
 
 from fpl.api.client import FPLClient
-from fpl.core.models import Player, Gameweek
+from fpl.core.models import Gameweek, Player
 from fpl.data.storage import DataStorage
 
 # Create logs directory

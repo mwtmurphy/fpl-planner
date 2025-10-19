@@ -1,7 +1,6 @@
 """Unit tests for API client."""
 
 import pytest
-from httpx import AsyncClient
 from pytest_httpx import HTTPXMock
 
 from fpl.api.client import FPLClient
@@ -338,8 +337,9 @@ async def test_rate_limiter_basic():
 @pytest.mark.asyncio
 async def test_rate_limiter_cleans_old_requests():
     """Test rate limiter removes old requests from tracking."""
-    from fpl.api.client import RateLimiter
     from datetime import datetime, timedelta
+
+    from fpl.api.client import RateLimiter
 
     limiter = RateLimiter(requests_per_minute=10)
 
@@ -358,9 +358,10 @@ async def test_rate_limiter_cleans_old_requests():
 @pytest.mark.asyncio
 async def test_rate_limiter_enforces_limit():
     """Test rate limiter waits when limit is exceeded."""
-    from fpl.api.client import RateLimiter
-    from datetime import datetime
     import asyncio
+    from datetime import datetime
+
+    from fpl.api.client import RateLimiter
 
     limiter = RateLimiter(requests_per_minute=2)
 
@@ -426,8 +427,9 @@ async def test_client_handles_500_server_error(httpx_mock: HTTPXMock):
 @pytest.mark.asyncio
 async def test_client_handles_network_error(httpx_mock: HTTPXMock):
     """Test client handles network errors gracefully."""
-    from fpl.api.exceptions import FPLAPIError
     import httpx
+
+    from fpl.api.exceptions import FPLAPIError
 
     # Simulate network error
     httpx_mock.add_exception(

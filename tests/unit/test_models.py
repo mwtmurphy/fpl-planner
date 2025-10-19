@@ -1,10 +1,11 @@
 """Unit tests for core models."""
 
-import pytest
 from datetime import datetime, timedelta
 from decimal import Decimal
 
-from fpl.core.models import Player, Team, Fixture, Gameweek, PlayerHistory
+import pytest
+
+from fpl.core.models import Fixture, Gameweek, Player, PlayerHistory, Team
 
 
 def test_player_creation(sample_player_data):

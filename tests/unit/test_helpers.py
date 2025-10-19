@@ -3,9 +3,7 @@
 from datetime import datetime, timedelta
 from decimal import Decimal
 
-import pytest
-
-from fpl.core.models import Player, Team, Gameweek
+from fpl.core.models import Gameweek, Player, Team
 from fpl.utils.helpers import (
     calculate_expected_points,
     calculate_form_rating,
@@ -25,7 +23,6 @@ from fpl.utils.helpers import (
     is_differential,
     is_premium,
 )
-
 
 # Format helpers
 

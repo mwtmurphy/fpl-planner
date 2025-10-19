@@ -1,13 +1,13 @@
 """Unit tests for data collectors."""
 
-import pytest
 from datetime import datetime, timedelta
+
+import pytest
 from pytest_httpx import HTTPXMock
 
 from fpl.api.client import FPLClient
-from fpl.data.collectors import PlayerCollector, FixtureCollector
-from fpl.core.models import Player, PlayerHistory, Fixture
-
+from fpl.core.models import Fixture, Player, PlayerHistory
+from fpl.data.collectors import FixtureCollector, PlayerCollector
 
 # PlayerCollector tests
 

@@ -3,12 +3,11 @@
 import json
 import time
 from datetime import datetime, timedelta
-from pathlib import Path
 
 import pandas as pd
 import pytest
 
-from fpl.core.models import Player, Fixture
+from fpl.core.models import Fixture, Player
 from fpl.data.storage import DataStorage
 
 

@@ -5,8 +5,8 @@ import pytest
 
 from app.utils.formatters import (
     apply_position_filter,
-    apply_team_filter,
     apply_price_bracket_filter,
+    apply_team_filter,
 )
 
 

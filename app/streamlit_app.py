@@ -18,7 +18,6 @@ from app.utils.data_loader import load_all_data
 from fpl.data.historical import HistoricalDataManager
 from fpl.data.storage import DataStorage
 
-
 # Initialize session state with defaults
 initialize_session_state(
     {

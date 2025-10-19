@@ -26,7 +26,7 @@ except ImportError:
     sys.exit(1)
 
 from fpl.api.client import FPLClient
-from fpl.core.models import Player, Team, Gameweek
+from fpl.core.models import Gameweek, Player, Team
 from fpl.data.storage import DataStorage
 
 # Create logs directory
@@ -203,7 +203,7 @@ async def main_async() -> int:
     logger.info(
         f"Total time: {int(elapsed.total_seconds() // 60)} min {int(elapsed.total_seconds() % 60)} sec"
     )
-    logger.info(f"Saved to: data/current/")
+    logger.info("Saved to: data/current/")
     logger.info("=" * 70)
 
     # Determine exit code

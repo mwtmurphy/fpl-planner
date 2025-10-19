@@ -5,8 +5,6 @@ This module provides shared fixtures for all tests.
 
 import pandas as pd
 import pytest
-from httpx import AsyncClient
-from pytest_httpx import HTTPXMock
 
 
 @pytest.fixture

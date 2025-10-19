@@ -188,7 +188,7 @@ def main() -> int:
     logger.info(f"Successful: {successful}/{len(SEASONS)} seasons")
     logger.info(f"Failed: {failed}/{len(SEASONS)} seasons")
     logger.info(f"Total rows imported: {total_rows:,}")
-    logger.info(f"Saved to: data/historical/")
+    logger.info("Saved to: data/historical/")
     logger.info("=" * 60)
 
     # List failed seasons if any

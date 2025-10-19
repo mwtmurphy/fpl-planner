@@ -11,10 +11,10 @@ echo "🚀 Setting up FPL Multi-GW Optimiser..."
 if ! command -v poetry &> /dev/null; then
     echo "📦 Installing Poetry..."
     curl -sSL https://install.python-poetry.org | python3 -
-    
+
     # Add Poetry to PATH for this session
     export PATH="$HOME/.local/bin:$PATH"
-    
+
     echo "✅ Poetry installed successfully!"
 else
     echo "✅ Poetry is already installed"
@@ -33,7 +33,7 @@ poetry run make setup
 echo "🔍 Verifying installation..."
 poetry run python -c "
 import requests
-import pandas as pd  
+import pandas as pd
 import numpy as np
 import sklearn
 import pulp

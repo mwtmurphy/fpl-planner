@@ -11,7 +11,6 @@ import streamlit as st
 from fpl.api.client import FPLClient
 from fpl.core.models import Team
 from fpl.data.collectors import PlayerCollector
-from fpl.data.historical import HistoricalDataManager
 from fpl.data.storage import DataStorage
 from fpl.utils.helpers import (
     calculate_form_fixtures,

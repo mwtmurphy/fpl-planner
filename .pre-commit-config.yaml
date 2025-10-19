@@ -1,0 +1,37 @@
+# Pre-commit hooks for automated code quality checks
+# See https://pre-commit.com for more information
+
+repos:
+  - repo: https://github.com/psf/black
+    rev: 25.9.0
+    hooks:
+      - id: black
+        language_version: python3.13
+
+  - repo: https://github.com/astral-sh/ruff-pre-commit
+    rev: v0.14.1
+    hooks:
+      - id: ruff
+        args: [--fix]
+        exclude: ^(app/pages/|app/streamlit_app\.py|scripts/|tests/)
+
+  # mypy disabled for initial setup - too many type annotation issues to fix
+  # TODO: Re-enable mypy in future phase after adding type annotations
+  # - repo: https://github.com/pre-commit/mirrors-mypy
+  #   rev: v1.18.2
+  #   hooks:
+  #     - id: mypy
+  #       additional_dependencies:
+  #         - types-requests
+  #         - pydantic
+  #       args: [--ignore-missing-imports, --no-strict-optional, --allow-untyped-calls]
+  #       exclude: ^(tests/|app/|scripts/|examples/)
+
+  - repo: https://github.com/pre-commit/pre-commit-hooks
+    rev: v4.6.0
+    hooks:
+      - id: trailing-whitespace
+      - id: end-of-file-fixer
+      - id: check-yaml
+      - id: check-added-large-files
+      - id: check-merge-conflict
