@@ -1,185 +1,192 @@
-# 🚀 Fantasy Premier League Multi-GW Optimiser
+# FPL Data Collection & Analysis
 
-An advanced FPL squad optimization tool that uses machine learning forecasting and mathematical optimization to maximize points across multiple gameweeks while managing transfers efficiently.
+A Python toolkit for collecting and analyzing Fantasy Premier League (FPL) data from the official FPL API.
 
-## 🎯 Features
+## Overview
 
-- **Multi-Gameweek Planning**: Optimize across 1-8 gameweek horizons
-- **Dynamic Horizon Selection**: Automatically choose optimal planning period
-- **Transfer Strategy**: Intelligent transfer planning with hit minimization
-- **Chip Strategy**: Optimal timing for Wildcard, Bench Boost, Triple Captain
-- **Machine Learning**: XGBoost forecasting for expected points
-- **Historical Backtesting**: Validate strategies on past seasons
-- **CLI Interface**: Easy-to-use command line application
+This project provides a clean, type-safe interface for accessing FPL data including players, teams, gameweeks, fixtures, and manager information. Built with modern Python standards, it enables data analysis, team optimization, and custom FPL applications.
 
-## 🛠️ Installation
+## Features
 
-### Prerequisites
-- Python 3.9+
-- Poetry package manager
+- **Comprehensive API Client**: Async HTTP client for all FPL endpoints
+- **Type-Safe Models**: Pydantic models for players, teams, gameweeks, and more
+- **Data Collection**: Modular collectors for different data sources
+- **Analysis Tools**: Utilities for player performance analysis and team optimization
+- **Well-Tested**: Unit and integration tests with pytest
+- **Modern Python**: Python 3.13+ with full type hints and async/await support
+
+## Installation
+
+### Requirements
+
+- Python 3.13+
+- pyenv (for Python version management)
+- poetry (for dependency management)
 
 ### Setup
 
-1. **Install Poetry** (if not already installed):
 ```bash
-curl -sSL https://install.python-poetry.org | python3 -
-```
-
-2. **Clone and setup project**:
-```bash
+# Clone repository
 git clone <repository-url>
-cd fpl-optimiser
+cd fpl
+
+# Set Python version (using pyenv)
+pyenv local 3.13.0
+
+# Install dependencies
 poetry install
+
+# Activate virtual environment
 poetry shell
 ```
 
-3. **Initialize project structure**:
+## Usage
+
+### Basic Example
+
+```python
+from fpl.api.client import FPLClient
+from fpl.core.models import Player, Team
+
+# Initialize client
+async with FPLClient() as client:
+    # Get all players
+    players = await client.get_players()
+
+    # Get gameweek data
+    gameweek = await client.get_gameweek(1)
+
+    # Get team information
+    teams = await client.get_teams()
+```
+
+### Data Collection
+
+```python
+from fpl.data.collectors import PlayerCollector
+
+# Collect player data
+collector = PlayerCollector()
+players = await collector.collect_all()
+```
+
+See `scripts/` directory for more examples.
+
+## Interactive Analysis Dashboard
+
+The project includes a **Streamlit web app** for interactive FPL player analysis.
+
+### Running the Dashboard
+
 ```bash
-make setup
+# Install Streamlit (if not already installed)
+poetry add streamlit
+
+# Run the app
+poetry run streamlit run app/streamlit_app.py
 ```
 
-## 🚀 Quick Start
+The app will open in your browser at `http://localhost:8501`
 
-Run the complete optimization pipeline:
+### Dashboard Features
+
+**Form Analysis Page**
+- View all players sorted by current form (avg points over last 5 gameweeks)
+- Filter by position (GK, DEF, MID, FWD)
+- Filter by team
+- Export analysis to CSV
+
+**Value Analysis Page**
+- View all players sorted by value (points per £m)
+- Filter by position
+- Filter by price bracket (Budget/Mid/Premium)
+- Set minimum points threshold
+- Export analysis to CSV
+
+### Dashboard Usage
+
+1. Navigate between pages using the sidebar
+2. Apply filters to narrow your analysis
+3. Sort tables by clicking column headers
+4. Download filtered results as CSV
+5. Data refreshes automatically every hour
+
+## Development
+
+### Commands
 
 ```bash
-# 1. Fetch latest FPL data
-make data
+# Install dependencies (including dev)
+poetry install
 
-# 2. Engineer features
-make features
+# Run tests
+poetry run pytest
 
-# 3. Train forecasting model
-make forecast
+# Run tests with coverage
+poetry run pytest --cov=src --cov-report=html
 
-# 4. Optimize for next gameweek
-make optimise_gw N=1
+# Format code
+poetry run black src tests
 
-# 5. Or optimize over multiple gameweeks
-make optimise_horizon H=3
+# Lint code
+poetry run ruff check src tests
 
-# 6. Find optimal horizon automatically
-make select_horizon
+# Type checking
+poetry run mypy src
 
-# 7. Run CLI application
-make run_app
+# Run all checks
+poetry run black src tests && poetry run ruff check src tests && poetry run mypy src && poetry run pytest
 ```
 
-## 📊 Usage Examples
-
-### Single Gameweek Optimization
-```bash
-make optimise_gw N=15  # Optimize for GW15
-```
-
-### Multi-Gameweek Optimization
-```bash
-make optimise_horizon H=5  # Plan over 5 gameweeks
-```
-
-### Backtesting
-```bash
-make backtest  # Test strategy on historical data
-make report    # Generate performance report
-```
-
-### CLI Application
-```bash
-python src/app.py --squad current_team.json --budget 1.5 --chips wildcard
-```
-
-## 📁 Project Structure
+### Project Structure
 
 ```
-fpl-optimiser/
-├── src/                    # Source code
-│   ├── data_collection.py  # FPL API data fetching
-│   ├── feature_engineering.py
-│   ├── forecasting.py      # ML predictions
-│   ├── single_gw_optimizer.py
-│   ├── multi_gw_optimizer.py
-│   ├── horizon_selection.py
-│   ├── backtesting.py
-│   ├── reporting.py
-│   └── app.py              # CLI interface
-├── data/
-│   ├── raw/               # Raw FPL data
-│   ├── features/          # Processed features
-│   └── forecasts/         # ML predictions
-├── output/                # Optimization results
-├── tests/                 # Unit tests
-├── Makefile              # Build commands
-└── pyproject.toml        # Dependencies
+fpl/
+├── src/fpl/
+│   ├── core/          # Domain models (Player, Team, Gameweek, etc.)
+│   ├── api/           # FPL API client and endpoints
+│   ├── data/          # Data collection and storage
+│   └── utils/         # Shared utilities
+├── tests/             # Unit and integration tests
+├── scripts/           # Example usage scripts
+└── sql/               # SQL files for local database (optional)
 ```
 
-## 📈 Optimization Model
+## FPL API Reference
 
-The optimizer uses Mixed Integer Linear Programming (MILP) with:
+### Main Endpoints
 
-**Objective**: Maximize expected points over planning horizon
+- `GET /api/bootstrap-static/` - Core data (players, teams, gameweeks)
+- `GET /api/fixtures/` - All fixtures
+- `GET /api/element-summary/{id}/` - Player details and history
+- `GET /api/event/{id}/live/` - Live gameweek data
 
-**Constraints**:
-- Squad composition (2 GK, 5 DEF, 5 MID, 3 FWD)
-- Budget limit (£100m)
-- Max 3 players per team
-- Transfer limits (1 free + paid transfers)
-- Chip usage restrictions
+See `.claude/fpl_api_reference.md` for comprehensive API documentation.
 
-**Features**:
-- Rolling form averages
-- Fixture difficulty adjustments  
-- Minutes played likelihood
-- Price change predictions
+## Standards
 
-## 🎯 Strategy Components
+This project follows workspace-level development standards:
+- **Python Style**: PEP 8 compliant, formatted with Black (88 char line length)
+- **Type Hints**: Required for all function signatures
+- **Testing**: pytest with minimum 80% coverage
+- **Architecture**: Layered architecture with separation of concerns
+- **Documentation**: Google-style docstrings
 
-1. **Forecasting**: XGBoost model predicts expected points
-2. **Single-GW**: Optimal squad for one gameweek
-3. **Multi-GW**: Transfer strategy across multiple gameweeks
-4. **Horizon Selection**: Dynamic planning period optimization
-5. **Backtesting**: Historical performance validation
+See `~/projects/.claude/` for detailed workspace standards.
 
-## 📊 Performance Metrics
+## Contributing
 
-- Total points vs baseline strategies
-- Transfer efficiency (points per transfer)
-- Chip ROI (return on investment)
-- Weekly consistency (variance analysis)
+1. Follow conventional commits for commit messages
+2. Ensure all tests pass before committing
+3. Maintain test coverage above 80%
+4. Run code formatters and linters
 
-## 🔧 Development
+## License
 
-### Code Quality
-```bash
-make format  # Black + isort formatting
-make lint    # Flake8 linting
-make test    # Pytest unit tests
-```
+MIT License
 
-### Data Pipeline
-```bash
-make clean   # Clean output files
-make data    # Refresh FPL data
-make features # Re-engineer features
-```
+## Resources
 
-## 📝 License
-
-MIT License - see LICENSE file for details.
-
-## 🤝 Contributing
-
-1. Fork the repository
-2. Create feature branch (`git checkout -b feature/amazing-feature`)
-3. Commit changes (`git commit -m 'Add amazing feature'`)
-4. Push to branch (`git push origin feature/amazing-feature`)
-5. Open Pull Request
-
-## 📞 Support
-
-- Open an issue for bugs/feature requests
-- Check existing issues before creating new ones
-- Provide detailed information for reproducibility
-
----
-
-**Built with**: Python, Poetry, PuLP, XGBoost, Pandas, NumPy
+- [Fantasy Premier League](https://fantasy.premierleague.com/)
+- [FPL API Documentation](https://www.oliverlooney.com/blogs/FPL-APIs-Explained)
+- [Workspace Standards](~/projects/.claude/)
