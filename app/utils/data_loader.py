@@ -4,6 +4,7 @@ import asyncio
 from datetime import datetime
 from decimal import Decimal
 from pathlib import Path
+from typing import Any
 
 import pandas as pd
 import streamlit as st
@@ -92,10 +93,12 @@ def _load_from_local_storage(
     data = []
     for player_data in players_data:
         # Handle both dict and Player model
+        p: dict[str, Any]
         if hasattr(player_data, "model_dump"):
             p = player_data.model_dump()
         else:
-            p = player_data
+            # Type ignore: storage can return raw dicts from JSON in some cases
+            p = player_data  # type: ignore[assignment]
 
         player_id = p.get("id")
         price = float(p.get("now_cost", 0)) / 10.0
@@ -121,9 +124,9 @@ def _load_from_local_storage(
         data.append(
             {
                 "name": p.get("web_name", ""),
-                "team_name": teams_dict.get(p.get("team"), "Unknown"),
+                "team_name": teams_dict.get(p.get("team") or 0, "Unknown"),
                 "team_id": p.get("team"),
-                "position": get_position_name(p.get("element_type")),
+                "position": get_position_name(p.get("element_type") or 0),
                 "price": price,
                 "price_formatted": format_price(p.get("now_cost", 0)),
                 "total_points": total_points,
@@ -132,7 +135,7 @@ def _load_from_local_storage(
                 "form_games": form_games_val,
                 "value_games": value_games,
                 "form": form_games_val,  # Keep for backward compatibility
-                "form_rating": calculate_form_rating(form_games_val),
+                "form_rating": calculate_form_rating(str(form_games_val)),
                 "value": value_fixtures,  # Keep for backward compatibility
                 "ownership": float(p.get("selected_by_percent", 0)),
                 "status": p.get("status", "a"),
@@ -259,7 +262,7 @@ def load_snapshot_data(
         # Current season snapshot from player histories
         # For now, return current data
         # TODO: Filter histories to only include data through_gameweek
-        return load_all_data(use_local_data=True)
+        return load_all_data(use_local_data=True)  # type: ignore[no-any-return]
     else:
         # Historical season from merged_gw.csv
         season_df = storage.load_historical_season(actual_season)

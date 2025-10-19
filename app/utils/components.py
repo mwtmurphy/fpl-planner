@@ -113,7 +113,7 @@ def create_filter_sidebar(
         >>> selected = create_filter_sidebar(filters)
         >>> print(selected["team"])
     """
-    selected_filters = {}
+    selected_filters: dict[str, Any] = {}
 
     with st.sidebar:
         st.header("🔍 Filters")
@@ -147,12 +147,13 @@ def create_filter_sidebar(
                     key=filter_key,
                 )
             elif config["type"] == "date_input":
-                selected_filters[key] = st.date_input(
+                date_result = st.date_input(
                     config["label"],
                     value=config.get("default"),
                     help=config.get("help"),
                     key=filter_key,
                 )
+                selected_filters[key] = date_result
 
     return selected_filters
 
@@ -302,7 +303,9 @@ def show_session_state_debug(expanded: bool = False) -> None:
 
         # Filter out internal Streamlit keys
         filtered_state = {
-            k: v for k, v in st.session_state.items() if not k.startswith("$$")
+            k: v
+            for k, v in st.session_state.items()
+            if isinstance(k, str) and not k.startswith("$$")
         }
 
         if filtered_state:

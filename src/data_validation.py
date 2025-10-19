@@ -7,7 +7,7 @@ before proceeding to feature engineering.
 """
 
 from pathlib import Path
-from typing import Dict
+from typing import Any, Dict, Union
 
 import pandas as pd
 
@@ -38,10 +38,10 @@ class FPLDataValidator:
         )
 
         # Data quality checks
-        checks["no_missing_ids"] = df["player_id"].notna().all()
-        checks["valid_positions"] = df["element_type"].isin([1, 2, 3, 4]).all()
-        checks["valid_prices"] = (df["now_cost"] > 0).all()
-        checks["no_negative_points"] = (df["total_points"] >= 0).all()
+        checks["no_missing_ids"] = bool(df["player_id"].notna().all())
+        checks["valid_positions"] = bool(df["element_type"].isin([1, 2, 3, 4]).all())
+        checks["valid_prices"] = bool((df["now_cost"] > 0).all())
+        checks["no_negative_points"] = bool((df["total_points"] >= 0).all())
 
         return checks
 
@@ -64,13 +64,13 @@ class FPLDataValidator:
         )
 
         # Data quality checks
-        checks["no_missing_fixture_ids"] = df["fixture_id"].notna().all()
-        checks["valid_gameweeks"] = df["gameweek"].between(1, 38).all()
-        checks["valid_difficulties"] = (
+        checks["no_missing_fixture_ids"] = bool(df["fixture_id"].notna().all())
+        checks["valid_gameweeks"] = bool(df["gameweek"].between(1, 38).all())
+        checks["valid_difficulties"] = bool(
             df["team_h_difficulty"].between(1, 5).all()
             and df["team_a_difficulty"].between(1, 5).all()
         )
-        checks["different_teams"] = (df["team_h"] != df["team_a"]).all()
+        checks["different_teams"] = bool((df["team_h"] != df["team_a"]).all())
 
         return checks
 
@@ -91,17 +91,17 @@ class FPLDataValidator:
         )
 
         # Data quality checks
-        checks["no_missing_ids"] = df["player_id"].notna().all()
-        checks["valid_gameweeks"] = df["gameweek"].between(1, 38).all()
-        checks["valid_minutes"] = (df["minutes"] >= 0).all() and (
-            df["minutes"] <= 90
-        ).all()
-        checks["no_negative_points"] = (df["total_points"] >= 0).all()
+        checks["no_missing_ids"] = bool(df["player_id"].notna().all())
+        checks["valid_gameweeks"] = bool(df["gameweek"].between(1, 38).all())
+        checks["valid_minutes"] = bool(
+            (df["minutes"] >= 0).all() and (df["minutes"] <= 90).all()
+        )
+        checks["no_negative_points"] = bool((df["total_points"] >= 0).all())
         checks["non_empty"] = True
 
         return checks
 
-    def validate_all_data(self) -> Dict[str, Dict[str, bool]]:
+    def validate_all_data(self) -> Dict[str, Union[Dict[str, bool], Dict[str, Any]]]:
         """Validate all datasets and return comprehensive report."""
         print("🔍 Validating collected data...")
 
@@ -141,11 +141,13 @@ class FPLDataValidator:
 
         except Exception as e:
             print(f"  ❌ Validation error: {e}")
-            return {"error": str(e)}
+            return {"error": {"file_exists": False, "error_message": str(e)}}
 
         return results
 
-    def print_validation_report(self, results: Dict[str, Dict[str, bool]]) -> None:
+    def print_validation_report(
+        self, results: Dict[str, Union[Dict[str, bool], Dict[str, Any]]]
+    ) -> None:
         """Print a formatted validation report."""
         print("\n" + "=" * 50)
         print("📊 DATA VALIDATION REPORT")

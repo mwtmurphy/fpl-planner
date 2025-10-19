@@ -18,7 +18,7 @@ Output Files:
 
 import time
 from pathlib import Path
-from typing import Dict
+from typing import Any, Dict
 
 import pandas as pd
 import requests
@@ -57,7 +57,8 @@ class FPLDataCollector:
         try:
             response = self.session.get(url, timeout=30)
             response.raise_for_status()
-            return response.json()
+            result: dict[Any, Any] = response.json()
+            return result
         except requests.exceptions.RequestException as e:
             print(f"Error fetching {url}: {e}")
             raise

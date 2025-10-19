@@ -1,5 +1,7 @@
 """Unit tests for API client."""
 
+from typing import Any
+
 import pytest
 from pytest_httpx import HTTPXMock
 
@@ -149,7 +151,11 @@ async def test_get_manager(httpx_mock: HTTPXMock):
 @pytest.mark.asyncio
 async def test_get_manager_history(httpx_mock: HTTPXMock):
     """Test get_manager_history method."""
-    mock_history = {"current": [], "past": [], "chips": []}
+    mock_history: dict[str, list[dict[str, Any]]] = {
+        "current": [],
+        "past": [],
+        "chips": [],
+    }
 
     httpx_mock.add_response(
         url="https://fantasy.premierleague.com/api/entry/123456/history/",

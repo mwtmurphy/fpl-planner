@@ -15,17 +15,16 @@ repos:
         args: [--fix]
         exclude: ^(app/pages/|app/streamlit_app\.py|scripts/|tests/)
 
-  # mypy disabled for initial setup - too many type annotation issues to fix
-  # TODO: Re-enable mypy in future phase after adding type annotations
-  # - repo: https://github.com/pre-commit/mirrors-mypy
-  #   rev: v1.18.2
-  #   hooks:
-  #     - id: mypy
-  #       additional_dependencies:
-  #         - types-requests
-  #         - pydantic
-  #       args: [--ignore-missing-imports, --no-strict-optional, --allow-untyped-calls]
-  #       exclude: ^(tests/|app/|scripts/|examples/)
+  - repo: https://github.com/pre-commit/mirrors-mypy
+    rev: v1.18.2
+    hooks:
+      - id: mypy
+        additional_dependencies:
+          - types-requests
+          - types-tqdm
+          - pandas-stubs
+          - pydantic
+        args: [--ignore-missing-imports]
 
   - repo: https://github.com/pre-commit/pre-commit-hooks
     rev: v4.6.0

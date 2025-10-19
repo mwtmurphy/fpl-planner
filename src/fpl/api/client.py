@@ -147,7 +147,8 @@ class FPLClient:
                 raise ServerError(f"Server error: {response.status_code}")
 
             response.raise_for_status()
-            return response.json()
+            result: dict[str, Any] = response.json()
+            return result
 
         except httpx.HTTPError as e:
             logger.error(
@@ -184,8 +185,10 @@ class FPLClient:
             List of fixture dicts
         """
         if event:
-            return await self._request("fixtures_by_gameweek", event_id=event)
-        return await self._request("fixtures")
+            result = await self._request("fixtures_by_gameweek", event_id=event)
+            return result  # type: ignore[return-value]
+        result = await self._request("fixtures")
+        return result  # type: ignore[return-value]
 
     async def get_player_summary(self, player_id: int) -> dict[str, Any]:
         """Get detailed player summary with history.
@@ -254,7 +257,8 @@ class FPLClient:
         Returns:
             List of transfer dicts
         """
-        return await self._request("manager_transfers", manager_id=manager_id)
+        result = await self._request("manager_transfers", manager_id=manager_id)
+        return result  # type: ignore[return-value]
 
     async def get_classic_league(self, league_id: int, page: int = 1) -> dict[str, Any]:
         """Get classic league standings.
@@ -313,7 +317,8 @@ class FPLClient:
             >>> for note in notes:
             ...     print(f"Team {note['team']}: {note['info_message']}")
         """
-        return await self._request("set_pieces")
+        result = await self._request("set_pieces")
+        return result  # type: ignore[return-value]
 
     async def get_event_status(self) -> dict[str, Any]:
         """Get current event status.
