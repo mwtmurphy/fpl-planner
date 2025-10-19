@@ -13,13 +13,13 @@ This project provides a clean, type-safe interface for accessing FPL data includ
 - **Data Collection**: Modular collectors for different data sources
 - **Analysis Tools**: Utilities for player performance analysis and team optimization
 - **Well-Tested**: Unit and integration tests with pytest
-- **Modern Python**: Python 3.11+ with full type hints and async/await support
+- **Modern Python**: Python 3.13+ with full type hints and async/await support
 
 ## Installation
 
 ### Requirements
 
-- Python 3.11+
+- Python 3.13+
 - pyenv (for Python version management)
 - poetry (for dependency management)
 
@@ -31,7 +31,7 @@ git clone <repository-url>
 cd fpl
 
 # Set Python version (using pyenv)
-pyenv local 3.11.0
+pyenv local 3.13.0
 
 # Install dependencies
 poetry install

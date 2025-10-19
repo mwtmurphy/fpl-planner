@@ -4,7 +4,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## Project Overview
 
-**FPL** is a Python toolkit for collecting and analyzing Fantasy Premier League data. Built with modern Python 3.11+ standards, it provides a clean, type-safe interface to the official FPL API for data analysis, team optimization, and custom applications.
+**FPL** is a Python toolkit for collecting and analyzing Fantasy Premier League data. Built with modern Python 3.13+ standards, it provides a clean, type-safe interface to the official FPL API for data analysis, team optimization, and custom applications.
 
 ### Development Status
 - **Current Version**: 0.1.0 (Pre-release)
@@ -15,7 +15,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 ## Modern Development Stack (2025)
 
 ### Core Technologies
-- **Python 3.11+**: Modern Python with latest type hint features
+- **Python 3.13+**: Modern Python with latest type hint features
 - **httpx**: Async HTTP client for API requests
 - **Pydantic**: Type-safe data validation and models
 - **pandas**: Data analysis and manipulation
@@ -445,7 +445,7 @@ cache_dir = os.getenv("FPL_CACHE_DIR", "./data/cache")
 
 **Poetry not finding Python version**
 ```bash
-pyenv local 3.11.0
+pyenv local 3.13.0
 poetry env use $(pyenv which python)
 ```
 
@@ -481,7 +481,7 @@ poetry add --group dev pytest-asyncio
 cd /path/to/fpl
 
 # 2. Set Python version
-pyenv local 3.11.0
+pyenv local 3.13.0
 
 # 3. Install dependencies
 poetry install
